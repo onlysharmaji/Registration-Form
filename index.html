@@ -112,27 +112,29 @@ form.addEventListener('submit', (event) => {
     // Replace with your Apps Script Web App URL
     const webAppUrl = 'https://script.google.com/macros/s/AKfycbxYrufQwqUlwCdaArb_AlRYHjFzWsbIe9knnECbzYWfARBeC6Zp8iMG-8ygE4sR_VG4UA/exec';
 
-   fetch(webAppUrl, {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(formData),
-    mode: 'cors' // Ensures cross-origin requests are handled
-})
-.then(response => response.json())
-.then(data => {
-    if (data.status === 'success') {
-        alert(data.message);
-        form.reset();
-    } else {
-        alert('An error occurred. Please try again.');
-    }
-})
-.catch(error => {
-    console.error('Error:', error);
-    alert('Failed to submit the form. Please check the console for details.');
+    fetch(webAppUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData),
+        mode: 'cors' // Ensures cross-origin requests are handled
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert(data.message);
+            form.reset();
+        } else {
+            alert('An error occurred. Please try again.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to submit the form. Please check the console for details.');
+    });
 });
 </script>
+
 </body>
 </html>
