@@ -1,144 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration Form</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 20px;
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-
-        form {
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="tel"],
-        input[type="date"],
-        textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Sheets Form</title>
 </head>
 <body>
-
-<h1>Registration Form</h1>
-
-<form id="registrationForm">
-    <label for="fullName">Full Name:</label>
-    <input type="text" id="fullName" name="fullName" required>
-
-    <label for="mobile">Mobile Number:</label>
-    <input type="tel" id="mobile" name="mobile" required>
+  <form id="form">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required><br><br>
 
     <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required>
+    <input type="email" id="email" name="email" required><br><br>
 
-    <label for="interests">Interests:</label>
-    <textarea id="interests" name="interests" rows="3"></textarea>
-
-    <label for="skills">Skills:</label>
-    <textarea id="skills" name="skills" rows="3"></textarea>
-
-    <label for="experience">Experience:</label>
-    <textarea id="experience" name="experience" rows="3"></textarea>
-
-    <label for="dob">Date of Birth:</label>
-    <input type="date" id="dob" name="dob">
-
-    <label for="qualifications">Qualifications:</label>
-    <textarea id="qualifications" name="qualifications" rows="3"></textarea>
+    <label for="message">Message:</label>
+    <textarea id="message" name="message" required></textarea><br><br>
 
     <button type="submit">Submit</button>
-</form>
+  </form>
 
-<script>
-const form = document.getElementById('registrationForm');
+  <script>
+    const form = document.getElementById('form');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
 
-form.addEventListener('submit', (event) => {
-    event.preventDefault();
+      try {
+        const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_URL', {
+          method: 'POST',
+          body: JSON.stringify(data),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
-    const formData = {
-        fullName: document.getElementById('fullName').value,
-        mobile: document.getElementById('mobile').value,
-        email: document.getElementById('email').value,
-        interests: document.getElementById('interests').value,
-        skills: document.getElementById('skills').value,
-        experience: document.getElementById('experience').value,
-        dob: document.getElementById('dob').value,
-        qualifications: document.getElementById('qualifications').value
-    };
+        if (!response.ok) throw new Error('Network response was not ok');
+        const result = await response.json();
 
-    const webAppUrl = 'https://script.google.com/macros/s/AKfycbw42CxF9-gB-DmQx7ZmIgoGdb0N57STH_nfQKOkYBwnbDKyhGTB27K8VAUlzRCK6N4/exec';
-
-    fetch(webAppUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.status === 'success') {
-            alert(data.message);
-            form.reset();
+        if (result.status === 'success') {
+          alert('Form submitted successfully!');
         } else {
-            alert('An error occurred: ' + data.message);
+          alert('Failed to submit form. Please try again.');
         }
-    })
-    .catch(error => {
+      } catch (error) {
         console.error('Error:', error);
-        alert('Failed to submit the form. Please check the console for details.');
+        alert('An error occurred. Check console for details.');
+      }
     });
-});
-
-</script>
-
+  </script>
 </body>
 </html>
